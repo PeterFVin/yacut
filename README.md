@@ -1,37 +1,33 @@
-Клонировать репозиторий и перейти в него в командной строке:
+# Проект yacut
 
+## О проекте
+
+Проект представляет собой сервис укорачивания ссылок. С его помощью, Вы сможете ассоциировать длинную пользовательскую ссылку с короткой, которую предложите сами или её предоставляет сервис. 
+
+### Использованные технологии: 
+
+ - python==3.11.3
+ - flask
+
+ ### Автор проекта:
+
+Петр Виноградов, python plus, когорта 31+
+[Петр Виноградов](https://github.com/PeterFVin)
+
+### Как запустить проект:
+
+Клонировать репозиторий:
+
+git clone https://github.com/PeterFVin/scrapy_parser_pep.git
 ```
-git clone 
+Перейти в папку scrapy_parser_pep
 ```
-
-```
-cd yacut
-```
-
-Cоздать и активировать виртуальное окружение:
-
-```
-python3 -m venv venv
-```
-
-* Если у вас Linux/macOS
-
-    ```
-    source venv/bin/activate
-    ```
-
-* Если у вас windows
-
-    ```
-    source venv/scripts/activate
-    ```
-
 Установить зависимости из файла requirements.txt:
-
-```
-python3 -m pip install --upgrade pip
-```
 
 ```
 pip install -r requirements.txt
 ```
+Запустить проект:
+
+```
+flask run
