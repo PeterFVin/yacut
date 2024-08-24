@@ -3,46 +3,35 @@ from re import match
 
 from flask import jsonify, request
 
-from . import app, db
-from .error_handlers import InvalidAPIUsage
-from .models import URLMap
-from .utils import get_unique_short_id
-
-NOT_FOUND_ID = 'Указанный id не найден'
-MISSING_REQUEST = 'Отсутствует тело запроса'
-URL_REQUIRED_FIELD = '"url" является обязательным полем!'
-PATTERN_URL = r'^[a-z]+://[^\/\?:]+(:[0-9]+)?(\/.*?)?(\?.*)?$'
-ERROR_URL = 'Указан недопустимый URL'
-PATTERN_SHORT_URL = r'^[A-Za-z0-9_]{1,16}$'
-ERROR_SHORT_URL = 'Указано недопустимое имя для короткой ссылки'
-ID_NOT_FREE = 'Имя "{}" уже занято.'
-
-
-@app.route('/api/id/<string:short>/', methods=['GET'])
-def yacat_redirect_api(short):
-    redirect = URLMap.query.filter_by(short=short).first()
-    if not redirect:
-        raise InvalidAPIUsage(NOT_FOUND_ID, status.NOT_FOUND)
-    return jsonify({'url': redirect.original})
+from yacut import app, db
+from yacut.error_handlers import InvalidAPIUsage
+from yacut.models import URLMap
+from yacut.utils import get_unique_short_id
 
 
 @app.route('/api/id/', methods=['POST'])
-def create_short_api():
-    data = request.get_json()
+def index_view_api():
+    data = request.get_json(silent=True)
     if not data:
-        raise InvalidAPIUsage(MISSING_REQUEST)
+        raise InvalidAPIUsage('Отсутствует тело запроса')
     if 'url' not in data:
-        raise InvalidAPIUsage(URL_REQUIRED_FIELD)
-    if not match(PATTERN_URL, data['url']):
-        raise InvalidAPIUsage(ERROR_URL)
+        raise InvalidAPIUsage('"url" является обязательным полем!')
     if not data.get('custom_id'):
-        data['custom_id'] = get_unique_short_id()
-    elif URLMap.query.filter_by(short=data['custom_id']).first():
-        raise InvalidAPIUsage(ID_NOT_FREE.format(data["custom_id"]))
-    elif not match(PATTERN_SHORT_URL, data['custom_id']):
-        raise InvalidAPIUsage(ERROR_SHORT_URL)
+        data.update({"custom_id": get_unique_short_id()})
+    if URLMap.query.filter_by(short=data['custom_id']).first():
+        raise InvalidAPIUsage('Предложенный вариант короткой ссылки уже существует.')
+    if not match(r'^[A-Za-z0-9]{1,16}$', data['custom_id']):
+        raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
     url_map = URLMap()
     url_map.from_dict(data)
     db.session.add(url_map)
     db.session.commit()
     return jsonify(url_map.to_dict()), status.CREATED
+
+
+@app.route('/api/id/<string:short>/', methods=['GET'])
+def redirect_url_api(short):
+    redirect = URLMap.query.filter_by(short=short).first()
+    if not redirect:
+        raise InvalidAPIUsage('Указанный id не найден', status.NOT_FOUND)
+    return jsonify({'url': redirect.original}), status.OK

@@ -2,7 +2,7 @@ from http import HTTPStatus as status
 
 from flask import jsonify, render_template
 
-from . import app, db
+from yacut import app, db
 
 
 @app.errorhandler(404)
@@ -26,7 +26,7 @@ class InvalidAPIUsage(Exception):
             self.status_code = status_code
 
     def to_dict(self):
-        return dict(message=self.message)
+        return {'message': self.message}
 
 
 @app.errorhandler(InvalidAPIUsage)

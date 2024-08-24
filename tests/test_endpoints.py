@@ -43,6 +43,7 @@ def test_create_empty_body(client):
         f'В ответ на пустой POST-запрос к эндпоинту `{CREATE_SHORT_LINK_URL}` '
         f'должен вернуться ответ статус-кодом {HTTPStatus.BAD_REQUEST.value}.'
     )
+    print(response.json)
     assert response.json, (
         f'Ответ на POST-запрос к эндпоинту `{CREATE_SHORT_LINK_URL}`, '
         'не содержащий тело запроса, должен быть быть в формате JSON.'
