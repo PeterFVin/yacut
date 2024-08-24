@@ -19,7 +19,9 @@ def index_view_api():
     if not data.get('custom_id'):
         data.update({"custom_id": get_unique_short_id()})
     if URLMap.query.filter_by(short=data['custom_id']).first():
-        raise InvalidAPIUsage('Предложенный вариант короткой ссылки уже существует.')
+        raise InvalidAPIUsage(
+            'Предложенный вариант короткой ссылки уже существует.'
+            )
     if not match(r'^[A-Za-z0-9]{1,16}$', data['custom_id']):
         raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
     url_map = URLMap()

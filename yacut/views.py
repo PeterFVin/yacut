@@ -33,6 +33,7 @@ def index_view():
               f'{request.base_url}{custom_id}</a>')
     return render_template('yacut.html', form=form)
 
+
 @app.route('/<string:short>', methods=['GET'])
 def redirect_url(short):
     return redirect(

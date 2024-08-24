@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
-from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
+from wtforms.validators import URL, DataRequired, Length, Optional
 
 
 class YacutForm(FlaskForm):
