@@ -18,7 +18,7 @@
 
 Клонировать репозиторий:
 
-git clone https://github.com/PeterFVin/scrapy_parser_pep.git
+git clone https://github.com/PeterFVin/yacut.git
 ```
 Перейти в папку scrapy_parser_pep
 ```
